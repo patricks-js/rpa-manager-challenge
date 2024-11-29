@@ -1,7 +1,12 @@
+import { Toaster } from "@/components/ui/sonner";
+import { router } from "@/routes";
+import { RouterProvider } from "react-router-dom";
+
 export function App() {
   return (
-    <div>
-      <h1>Vite + React</h1>
-    </div>
+    <>
+      <RouterProvider router={router} />
+      <Toaster />
+    </>
   );
 }
