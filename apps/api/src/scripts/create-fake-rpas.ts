@@ -51,7 +51,7 @@ function generateTestRecord(): typeof rpa.$inferInsert {
 export async function createFakeRpas() {
   const rpas: (typeof rpa.$inferInsert)[] = [];
 
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 4; i++) {
     rpas.push(generateTestRecord());
   }
 
@@ -61,6 +61,8 @@ export async function createFakeRpas() {
     console.log("RPAs já existem no banco de dados.");
     return;
   }
+
+  rpas[0].cpf = "12345678900";
 
   await db.insert(rpa).values(rpas).execute();
 }

@@ -13,6 +13,10 @@ Este sistema é composto por uma interface de usuário para autenticação, cada
 
 ## 🚀 Tecnologias Utilizadas
 
+### Monorepo
+
+- **Turborepo**: Utilizado para gerenciar o projeto como um monorepo. Facilita a comunicação entre as partes do projeto e permite a execução de comandos em todos os projetos.
+
 ### Frontend
 
 - **React com TypeScript**: Utilizado para criar uma interface de usuário. A escolha do React permite maior modularidade, reutilização de componentes e uma experiência de desenvolvimento eficiente.
@@ -99,9 +103,10 @@ Este sistema é composto por uma interface de usuário para autenticação, cada
 
 4. **Configurar Variáveis de Ambiente**:
 
-   Crie um arquivo `.env.local` baseado no exemplo `.env.example` e preencha as variáveis necessárias.
+   Crie um arquivo `.env.local` em `apps/api` baseado no exemplo `.env.example` e preencha as variáveis necessárias.
 
 5. **Rodando o projeto**:
+   Ao iniciar a aplicação, os scripts de seed do banco de dados no back-end serão executados automaticamente, garantindo que um usuário administrador e registros de RPAs de teste sejam criados. Isso facilita a inicialização do projeto com dados úteis para desenvolvimento e testes.
 
    ```bash
    pnpm dev
@@ -109,3 +114,28 @@ Este sistema é composto por uma interface de usuário para autenticação, cada
 
 6. **Acessar no Navegador**:
    O projeto deve estar disponível em `http://localhost:5173`.
+
+## 🔐 Credenciais Padrão
+
+Assim que a aplicação backend for iniciada, um usuário administrador padrão será criado automaticamente. As credenciais padrão são:
+
+- **Usuário**: `patrick`
+- **Senha**: `admin`
+
+## 📝 Registro de Teste
+
+Para facilitar a validação do funcionamento da consulta de registros, um **registro de teste** também é criado automaticamente quando a aplicação é iniciada. Esse registro inclui um autônomo fictício com o CPF `"12345678900"`. Você pode utilizar esse CPF para realizar uma primeira consulta e verificar se os dados são exibidos corretamente na interface.
+
+- **CPF de Teste**: `12345678900`
+
+Esse registro está disponível assim que a aplicação inicia e é útil para garantir que a funcionalidade de consulta esteja funcionando conforme o esperado.
+
+### Validação de CPF
+
+Note que, o CPF fornecido no registro de teste não é válido. Ao tentar atualizar o CPF, o sistema irá retornar um erro de validação, indicando que o CPF é inválido. Essa ação foi proposital para demonstrar a validação de CPF em um sistema de login e cadastro de autônomos.
+
+![Atualizando CPF com CPF inválido](.github/invalid-cpf.jpg)
+
+Ao tentar atualizar o CPF com um CPF válido, o sistema irá atualizar o registro com sucesso.
+
+![Atualizando CPF com CPF válido](.github/updated-rpa.png)
