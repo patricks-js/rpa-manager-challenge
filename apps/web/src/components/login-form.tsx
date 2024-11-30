@@ -10,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useAuthStore } from "@/hooks/use-auth-store";
-import { api } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
@@ -27,11 +26,15 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 async function signIn({ username, password }: FormSchema) {
-  const response = await api.login.$post({
-    json: {
+  const response = await fetch("http://localhost:3333/api/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       username,
       password,
-    },
+    }),
   });
 
   if (response.status === 401) {
