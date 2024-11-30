@@ -4,13 +4,30 @@ import { SheetTrigger } from "@/components/ui/sheet";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search } from "lucide-react";
+import { getRPAs } from "@/services/get-rpas";
+import { useQuery } from "@tanstack/react-query";
+import { Loader, Search } from "lucide-react";
 
 export function DashboardPage() {
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["fetch-rpas"],
+    queryFn: getRPAs,
+  });
+
+  if (error) {
+    return (
+      <div className="container mx-auto py-10">
+        <h1 className="text-4xl font-bold mb-10">Dashboard</h1>
+        <div>Erro ao carregar RPAs</div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-4xl font-bold mb-10">Dashboard</h1>
@@ -47,31 +64,33 @@ export function DashboardPage() {
               <TableHead>Estado</TableHead>
               <TableHead>Telefone</TableHead>
               <TableHead>NIT</TableHead>
-              <TableHead />
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* {rpas.map((rpa) => (
-              <TableRow key={rpa.id}>
-                <TableCell>{rpa.id}</TableCell>
-                <TableCell>{rpa.nome}</TableCell>
-                <TableCell>{rpa.email}</TableCell>
-                <TableCell>{rpa.cpf}</TableCell>
-                <TableCell>{rpa.dataNascimento}</TableCell>
-                <TableCell>{rpa.identity.nacionalidade}</TableCell>
-                <TableCell>{rpa.address.estado}</TableCell>
-                <TableCell>{rpa.telefone}</TableCell>
-                <TableCell>{rpa.nit}</TableCell>
-                <TableCell>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" size="icon">
-                      <Edit className="size-4" />
-                    </Button>
-                  </SheetTrigger>
-                </TableCell>
-                <RPAForm />
-              </TableRow>
-            ))} */}
+            {isLoading ? (
+              <div className="w-full h-full flex justify-center items-center">
+                <Loader className="size-6 animate-spin" />
+              </div>
+            ) : (
+              data?.rpas.map((rpa) => (
+                <SheetTrigger
+                  key={rpa.id}
+                  asChild
+                >
+                  <TableRow className="h-12">
+                    <TableCell>{rpa.id}</TableCell>
+                    <TableCell>{rpa.nome}</TableCell>
+                    <TableCell>{rpa.email}</TableCell>
+                    <TableCell>{rpa.cpf}</TableCell>
+                    <TableCell>{rpa.dataNascimento}</TableCell>
+                    <TableCell>{rpa.nacionalidade}</TableCell>
+                    <TableCell>{rpa.estado}</TableCell>
+                    <TableCell>{rpa.telefone}</TableCell>
+                    <TableCell>{rpa.nit}</TableCell>
+                  </TableRow>
+                </SheetTrigger>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
