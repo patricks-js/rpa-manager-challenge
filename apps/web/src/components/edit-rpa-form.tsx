@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -10,41 +9,36 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/hooks/use-auth-store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { RPA } from "@server/db/schema";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
 const formSchema = z.object({
-  nome: z.string(),
-  nacionalidade: z.string(),
-  telefone: z.string(),
-  dataNascimento: z.coerce.date(),
-  estadoCivil: z.string(),
-  numeroDependentes: z.number().min(0).max(10),
-  cep: z.string(),
-  bairro: z.string(),
-  estado: z.string(),
-  municipio: z.string(),
-  rua: z.string(),
-  numero: z.string(),
-  complemento: z.string(),
-  categoriaAutonomo: z.string(),
+  nome: z.string().optional(),
+  cpf: z.string().optional(),
+  dataNascimento: z.coerce.date().optional(),
+  estadoCivil: z.string().optional(),
+  numeroDependentes: z.coerce.number().optional(),
+  nacionalidade: z.string().optional(),
+  cep: z.string().optional(),
+  rua: z.string().optional(),
+  numero: z.string().optional(),
+  complemento: z.string().optional(),
+  bairro: z.string().optional(),
+  estado: z.string().optional(),
+  municipio: z.string().optional(),
+  telefone: z.string().optional(),
+  categoriaAutonomo: z.string().optional(),
 });
 
 type EditRPAFormProps = {
@@ -52,10 +46,13 @@ type EditRPAFormProps = {
 };
 
 export function EditRPAForm({ rpa }: EditRPAFormProps) {
+  const { token } = useAuthStore.getState();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       nome: rpa.nome,
+      cpf: rpa.cpf,
       nacionalidade: rpa.nacionalidade,
       telefone: rpa.telefone,
       dataNascimento: new Date(rpa.dataNascimento),
@@ -72,17 +69,46 @@ export function EditRPAForm({ rpa }: EditRPAFormProps) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
+      const response = await fetch(
+        `http://localhost:3333/api/auth/rpa/${rpa.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(values),
+        },
       );
+
+      if (response.status === 401) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
+      if (response.status === 404) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
+      if (response.status === 400) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
+      if (response.status === 500) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
+      toast.success("RPA dados atualizados com sucesso");
     } catch (error) {
       console.error("Form submission error", error);
-      toast.error("Failed to submit the form. Please try again.");
+      toast.error(
+        `Falha ao atualizar dados da RPA: ${(error as Error).message}`,
+      );
     }
   }
 
@@ -137,7 +163,7 @@ export function EditRPAForm({ rpa }: EditRPAFormProps) {
         </div>
 
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-4">
+          <div className="col-span-6">
             <FormField
               control={form.control}
               name="telefone"
@@ -147,6 +173,26 @@ export function EditRPAForm({ rpa }: EditRPAFormProps) {
                   <FormControl>
                     <Input
                       placeholder="Número de telefone"
+                      type=""
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="col-span-6">
+            <FormField
+              control={form.control}
+              name="cpf"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CPF</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="CPF do autônomo"
                       type=""
                       {...field}
                     />
@@ -167,38 +213,20 @@ export function EditRPAForm({ rpa }: EditRPAFormProps) {
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-1">
                   <FormLabel className="h-[19px]">Data de nascimento</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground",
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      className="w-auto p-0"
-                      align="start"
-                    >
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-
+                  <FormControl>
+                    <Input
+                      type="date"
+                      value={
+                        field.value ? format(field.value, "yyyy-MM-dd") : ""
+                      }
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value ? new Date(e.target.value) : undefined,
+                        )
+                      }
+                      className="w-[240px] pl-3 text-left font-normal border rounded-md"
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -427,7 +455,12 @@ export function EditRPAForm({ rpa }: EditRPAFormProps) {
             />
           </div>
         </div>
-        <Button type="submit">Submit</Button>
+        <Button
+          size="lg"
+          type="submit"
+        >
+          Atualizar
+        </Button>
       </form>
     </Form>
   );

@@ -1,11 +1,12 @@
 import { db } from "@/db/index.js";
 import { rpa } from "@/db/schema.js";
 import { faker } from "@faker-js/faker";
+import { cpf } from "cpf-cnpj-validator";
 
 function generateTestRecord(): typeof rpa.$inferInsert {
   return {
     nome: faker.person.fullName(),
-    cpf: faker.number.int({ min: 10000000000, max: 99999999999 }).toString(),
+    cpf: cpf.generate(),
     // biome-ignore lint/style/noNonNullAssertion: <explanation>
     dataNascimento: faker.date
       .birthdate({ min: 18, max: 65, mode: "age" })

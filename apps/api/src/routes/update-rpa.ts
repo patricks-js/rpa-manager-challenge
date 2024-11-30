@@ -1,5 +1,7 @@
 import { db } from "@/db/index.js";
 import { rpa } from "@/db/schema.js";
+import { formatDateToSQLite } from "@/utils/format-date-to-sqlite.js";
+import { isValidCPF } from "@/utils/validate-cpf.js";
 import { zValidator } from "@hono/zod-validator";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
@@ -7,6 +9,7 @@ import { ZodError, z } from "zod";
 
 const bodySchema = z.object({
   nome: z.string().optional(),
+  cpf: z.string().optional(),
   dataNascimento: z.coerce.date().optional(),
   estadoCivil: z.string().optional(),
   numeroDependentes: z.coerce.number().optional(),
@@ -40,9 +43,19 @@ export const updateRpaRoute = new Hono().put(
 
       const body = c.req.valid("json");
 
+      if (body.cpf && !isValidCPF(body.cpf)) {
+        return c.json({ message: "CPF é inválido" }, 400);
+      }
+
       const toUpdateFields = Object.fromEntries(
         Object.entries(body).filter(([_, value]) => value !== undefined),
       );
+
+      if (toUpdateFields.dataNascimento) {
+        toUpdateFields.dataNascimento = formatDateToSQLite(
+          new Date(toUpdateFields.dataNascimento),
+        );
+      }
 
       if (Object.keys(toUpdateFields).length === 0) {
         return c.json(
@@ -59,7 +72,9 @@ export const updateRpaRoute = new Hono().put(
         return c.json({ message: "Erro de validação" }, 400);
       }
 
-      return c.json({ message: "Erro ao fazer login" }, 500);
+      console.log(error);
+
+      return c.json({ message: "Erro ao atualizar RPA" }, 500);
     }
   },
 );
