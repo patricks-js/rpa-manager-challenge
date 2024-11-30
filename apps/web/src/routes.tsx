@@ -2,10 +2,9 @@ import { createBrowserRouter } from "react-router-dom";
 
 import { LoginPage } from "@/pages/login";
 import { ProtectedRoutesWrapper } from "@/pages/protected-routes-wrapper";
+import { EditRpaPage } from "./pages/edit-rpa";
 import { HomePage } from "./pages/home";
 import { RegisterRpaPage } from "./pages/register-rpa";
-import { RpaFormPage } from "./pages/rpa-form";
-import { SearchRPAPage } from "./pages/search-rpa";
 
 export const router = createBrowserRouter([
   {
@@ -17,12 +16,8 @@ export const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/search-rpa",
-        element: <SearchRPAPage />,
-      },
-      {
-        path: "/rpa-form/:cpf",
-        element: <RpaFormPage />,
+        path: "/edit-rpa/:cpf",
+        element: <EditRpaPage />,
       },
       {
         path: "/register-rpa",
