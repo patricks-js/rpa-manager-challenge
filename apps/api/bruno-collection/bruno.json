@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Case Resolution",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

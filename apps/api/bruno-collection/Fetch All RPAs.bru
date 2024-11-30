@@ -1,0 +1,15 @@
+meta {
+  name: Fetch All RPAs
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}/auth/rpa
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ACCESS_TOKEN}}
+}

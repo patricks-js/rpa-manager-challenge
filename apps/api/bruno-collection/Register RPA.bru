@@ -1,0 +1,43 @@
+meta {
+  name: Register RPA
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{base_url}}/auth/rpa
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "nome": "Ana Clara Souza",
+    "cpf": "46223823347",
+    "dataNascimento": "1990-05-14",
+    "estadoCivil": "Casada",
+    "identidadeNumero": "20458976",
+    "orgaoEmissor": "SSP",
+    "estadoEmissor": "SP",
+    "numeroDependentes": 1,
+    "nacionalidade": "Brasileira",
+    "cep": "04052010",
+    "rua": "Rua das Flores",
+    "numero": "250",
+    "complemento": "Apto 302",
+    "bairro": "Vila Mariana",
+    "estado": "São Paulo",
+    "municipio": "São Paulo",
+    "telefone": "11987654321",
+    "email": "ana.clara@gmail.com",
+    "numeroContribuinte": "20045",
+    "categoriaAutonomo": "Consultor",
+    "cboAutonomo": "252310",
+    "codigoReceita": "3168",
+    "nit": "1029384756"
+  }
+}
