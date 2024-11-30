@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAuthStore } from "@/hooks/use-auth-store";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
@@ -30,7 +31,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-const formSchema = z.object({
+export const rpaFormSchema = z.object({
   nome: z.string(),
   email: z.string(),
   nacionalidade: z.string(),
@@ -56,25 +57,49 @@ const formSchema = z.object({
   nit: z.string(),
 });
 
+export type RPAFormSchema = z.infer<typeof rpaFormSchema>;
+
 export function RegisterRpaPage() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { token } = useAuthStore.getState();
+
+  const form = useForm<RPAFormSchema>({
+    resolver: zodResolver(rpaFormSchema),
     defaultValues: {
       dataNascimento: new Date(),
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: RPAFormSchema) {
     try {
-      console.log(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-      );
+      const response = await fetch("http://localhost:3333/api/auth/rpa", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (response.status === 401) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
+      if (response.status === 400) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
+      if (response.status === 500) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
+      toast.success(`RPA cadastrada com sucesso: ${values.email}`);
+      form.reset();
     } catch (error) {
       console.error("Form submission error", error);
-      toast.error("Failed to submit the form. Please try again.");
+      toast.error("Falha ao cadastrar RPA. Por favor, tente novamente.");
     }
   }
 
@@ -616,7 +641,12 @@ export function RegisterRpaPage() {
               />
             </div>
           </div>
-          <Button type="submit">Submit</Button>
+          <Button
+            size="lg"
+            type="submit"
+          >
+            Registrar
+          </Button>
         </form>
       </Form>
     </div>

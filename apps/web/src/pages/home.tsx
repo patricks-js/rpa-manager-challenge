@@ -30,11 +30,12 @@ export function HomePage() {
     try {
       const data = await getRPAByCPF(values.cpf);
 
-      navigate(`/rpa-form/${data.rpa.cpf}`, { replace: true });
+      navigate(`/edit-rpa/${data.rpa.cpf}`, { replace: true });
       console.log(data);
     } catch (error) {
       console.error("Form submission error", error);
-      toast.error("Falha ao buscar RPA. Por favor, tente novamente.");
+      toast.info("RPA não encontrada.");
+      navigate("/register-rpa", { replace: true });
     }
   }
 
