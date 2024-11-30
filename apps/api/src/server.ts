@@ -23,11 +23,15 @@ const app = new Hono<{ Variables: Variables }>();
 app.use("*", logger());
 app.use("/auth/*", jwt({ secret: env.JWT_SECRET }));
 
-app.route("/login", loginRoute);
-app.route("/auth/rpa", registerRpaRoute);
-app.route("/auth/rpa", fetchAllRpasRoute);
-app.route("/auth/rpa", getRpaByIdRoute);
-app.route("/auth/rpa", updateRpaRoute);
+const apiRoutes = app
+  .basePath("/api")
+  .route("/login", loginRoute)
+  .route("/auth/rpa", registerRpaRoute)
+  .route("/auth/rpa", fetchAllRpasRoute)
+  .route("/auth/rpa", getRpaByIdRoute)
+  .route("/auth/rpa", updateRpaRoute);
+
+export type ApiRoutes = typeof apiRoutes;
 
 const port = 3333;
 console.log(`Server is running on http://localhost:${port}`);
