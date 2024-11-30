@@ -1,0 +1,22 @@
+meta {
+  name: Edit RPA
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{base_url}}/auth/rpa/13
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ACCESS_TOKEN}}
+}
+
+body:json {
+  {
+    "estado": "Recife",
+    "municipio": "Boa Viagem"
+  }
+}
