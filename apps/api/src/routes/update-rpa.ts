@@ -23,16 +23,16 @@ const bodySchema = z.object({
 });
 
 export const updateRpaRoute = new Hono().put(
-  "/:rpaId",
+  "/:rpaId{[0-9]+}",
   zValidator("json", bodySchema),
   async (c) => {
     try {
-      const { rpaId } = c.req.param();
+      const rpaId = Number.parseInt(c.req.param("rpaId"));
 
       const [foundRpa] = await db
         .select({ id: rpa.id })
         .from(rpa)
-        .where(eq(rpa.id, Number.parseInt(rpaId)));
+        .where(eq(rpa.id, rpaId));
 
       if (!foundRpa) {
         return c.json({ message: "RPA não encontrada." }, 404);
@@ -51,10 +51,7 @@ export const updateRpaRoute = new Hono().put(
         );
       }
 
-      await db
-        .update(rpa)
-        .set(toUpdateFields)
-        .where(eq(rpa.id, Number.parseInt(rpaId)));
+      await db.update(rpa).set(toUpdateFields).where(eq(rpa.id, rpaId));
 
       return c.json({ message: "RPA atualizada com sucesso." });
     } catch (error) {
