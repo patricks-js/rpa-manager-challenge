@@ -15,7 +15,7 @@ export function ProtectedRoutesWrapper() {
   }
 
   return (
-    <div className="container mx-auto py-10 min-h-screen">
+    <div className="container mx-auto">
       <Outlet />
     </div>
   );
