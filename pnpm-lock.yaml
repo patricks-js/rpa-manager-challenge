@@ -48,6 +48,9 @@ importers:
       '@faker-js/faker':
         specifier: ^9.2.0
         version: 9.2.0
+      '@rpa/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@types/bcryptjs':
         specifier: ^2.4.6
         version: 2.4.6
@@ -154,6 +157,8 @@ importers:
       vite:
         specifier: ^6.0.1
         version: 6.0.1(@types/node@22.10.1)(jiti@1.21.6)(tsx@4.19.2)(yaml@2.6.1)
+
+  packages/tsconfig: {}
 
 packages:
 

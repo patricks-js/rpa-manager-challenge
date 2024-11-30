@@ -1,5 +1,5 @@
-import { db } from "@/db/index.js";
-import { rpa } from "@/db/schema.js";
+import { db } from "@/db/index";
+import { rpa } from "@/db/schema";
 import { Hono } from "hono";
 
 export const fetchAllRpasRoute = new Hono().get("/", async (c) => {
@@ -18,29 +18,19 @@ export const fetchAllRpasRoute = new Hono().get("/", async (c) => {
       cboAutonomo: rpa.cboAutonomo,
       codigoReceita: rpa.codigoReceita,
       nit: rpa.nit,
-      identity: {
-        identidadeNumero: rpa.identidadeNumero,
-        orgaoEmissor: rpa.orgaoEmissor,
-        estadoEmissor: rpa.estadoEmissor,
-        nacionalidade: rpa.nacionalidade,
-      },
-      address: {
-        cep: rpa.cep,
-        rua: rpa.rua,
-        numero: rpa.numero,
-        complemento: rpa.complemento,
-        bairro: rpa.bairro,
-        estado: rpa.estado,
-        municipio: rpa.municipio,
-      },
+      identidadeNumero: rpa.identidadeNumero,
+      orgaoEmissor: rpa.orgaoEmissor,
+      estadoEmissor: rpa.estadoEmissor,
+      nacionalidade: rpa.nacionalidade,
+      cep: rpa.cep,
+      rua: rpa.rua,
+      numero: rpa.numero,
+      complemento: rpa.complemento,
+      bairro: rpa.bairro,
+      estado: rpa.estado,
+      municipio: rpa.municipio,
     })
-    .from(rpa)
-    .limit(10)
-    .offset(0);
+    .from(rpa);
 
-  if (rpas.length === 0) {
-    return c.json({ message: "Nenhuma RPA encontrada." });
-  }
-
-  return c.json({ rpas });
+  return c.json({ rpas }, 200);
 });

@@ -1,8 +1,8 @@
-import { db } from "@/db/index.js";
-import { rpa } from "@/db/schema.js";
-import type { Variables } from "@/server.js";
-import { formatDateToSQLite } from "@/utils/format-date-to-sqlite.js";
-import { isValidCPF } from "@/utils/validate-cpf.js";
+import { db } from "@/db/index";
+import { rpa } from "@/db/schema";
+import type { Variables } from "@/server";
+import { formatDateToSQLite } from "@/utils/format-date-to-sqlite";
+import { isValidCPF } from "@/utils/validate-cpf";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { ZodError, z } from "zod";

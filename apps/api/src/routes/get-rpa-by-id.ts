@@ -1,12 +1,12 @@
-import { db } from "@/db/index.js";
-import { rpa } from "@/db/schema.js";
+import { db } from "@/db/index";
+import { rpa } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 
 export const getRpaByIdRoute = new Hono().get("/:rpaId{[0-9]+}", async (c) => {
   const rpaId = Number.parseInt(c.req.param("rpaId"));
 
-  const [foundRpa] = await db
+  const foundRpa = await db
     .select({
       id: rpa.id,
       nome: rpa.nome,
@@ -40,9 +40,9 @@ export const getRpaByIdRoute = new Hono().get("/:rpaId{[0-9]+}", async (c) => {
     .from(rpa)
     .where(eq(rpa.id, rpaId));
 
-  if (!foundRpa) {
+  if (!foundRpa[0]) {
     return c.json({ error: "Not Found" }, 404);
   }
 
-  return c.json({ rpa: foundRpa }, 200);
+  return c.json({ rpa: foundRpa[0] }, 200);
 });

@@ -1,16 +1,16 @@
-import { env } from "@/env.js";
+import { env } from "@/env";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { type JwtVariables, jwt } from "hono/jwt";
 import { logger } from "hono/logger";
 
-import { fetchAllRpasRoute } from "./routes/fetch-all-rpas.js";
-import { getRpaByIdRoute } from "./routes/get-rpa-by-id.js";
-import { loginRoute } from "./routes/login.js";
-import { registerRpaRoute } from "./routes/register-rpa.js";
-import { updateRpaRoute } from "./routes/update-rpa.js";
-import { createAdminUSer } from "./scripts/create-admin-user.js";
-import { createFakeRpas } from "./scripts/create-fake-rpas.js";
+import { fetchAllRpasRoute } from "@/routes/fetch-all-rpas";
+import { getRpaByIdRoute } from "@/routes/get-rpa-by-id";
+import { loginRoute } from "@/routes/login";
+import { registerRpaRoute } from "@/routes/register-rpa";
+import { updateRpaRoute } from "@/routes/update-rpa";
+import { createAdminUSer } from "@/scripts/create-admin-user";
+import { createFakeRpas } from "@/scripts/create-fake-rpas";
 
 export type Variables = JwtVariables<{
   sub: number;
