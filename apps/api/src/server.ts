@@ -4,6 +4,7 @@ import { Hono } from "hono";
 import { type JwtVariables, jwt } from "hono/jwt";
 import { logger } from "hono/logger";
 import { fetchAllRpasRoute } from "./routes/fetch-all-rpas.js";
+import { getRpaByIdRoute } from "./routes/get-rpa-by-id.js";
 import { loginRoute } from "./routes/login.js";
 import { registerRpaRoute } from "./routes/register-rpa.js";
 import { createAdminUSer } from "./scripts/create-admin-user.js";
@@ -23,6 +24,7 @@ app.use("/auth/*", jwt({ secret: env.JWT_SECRET }));
 app.route("/login", loginRoute);
 app.route("/auth/rpa", registerRpaRoute);
 app.route("/auth/rpa", fetchAllRpasRoute);
+app.route("/auth/rpa", getRpaByIdRoute);
 
 const port = 3333;
 console.log(`Server is running on http://localhost:${port}`);
