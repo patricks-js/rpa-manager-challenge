@@ -56,7 +56,7 @@ export const updateRpaRoute = new Hono().put(
       return c.json({ message: "RPA atualizada com sucesso." });
     } catch (error) {
       if (error instanceof ZodError) {
-        return c.json({ message: error.flatten().fieldErrors }, 400);
+        return c.json({ message: "Erro de validação" }, 400);
       }
 
       return c.json({ message: "Erro ao fazer login" }, 500);

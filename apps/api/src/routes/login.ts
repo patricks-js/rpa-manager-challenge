@@ -44,10 +44,10 @@ export const loginRoute = new Hono().post(
 
       const token = await sign(payload, env.JWT_SECRET);
 
-      return c.json({ token });
+      return c.json({ token }, 200);
     } catch (error) {
       if (error instanceof ZodError) {
-        return c.json({ message: error.flatten().fieldErrors }, 400);
+        return c.json({ message: "Erro de validação" }, 400);
       }
 
       return c.json({ message: "Erro ao fazer login" }, 500);

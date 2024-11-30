@@ -11,7 +11,11 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { api } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -21,7 +25,47 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
+async function signIn({ username, password }: FormSchema) {
+  const response = await api.login.$post({
+    json: {
+      username,
+      password,
+    },
+  });
+
+  if (response.status === 401) {
+    const error = await response.json();
+    throw new Error(error.message);
+  }
+
+  if (response.status === 400) {
+    const error = await response.json();
+    throw new Error(error.message);
+  }
+
+  if (response.status === 500) {
+    const error = await response.json();
+    throw new Error(error.message);
+  }
+
+  const data = await response.json();
+
+  return data;
+}
+
 export function LoginForm() {
+  const navigate = useNavigate();
+  const mutation = useMutation({
+    mutationFn: signIn,
+    onSuccess: () => {
+      toast.success("Login successful!");
+      navigate("/");
+    },
+    onError: (error) => {
+      toast.error(`Erro ao entrar: ${error.message}`);
+    },
+  });
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,12 +75,9 @@ export function LoginForm() {
   });
 
   async function onSubmit(values: FormSchema) {
-    await api.login.$post({
-      json: {
-        username: values.username,
-        password: values.password,
-      },
-    });
+    const data = await mutation.mutateAsync(values);
+
+    console.log(data.token);
   }
 
   return (
@@ -80,12 +121,12 @@ export function LoginForm() {
         <Button
           type="submit"
           className="w-full"
-          // disabled={mutation.isPending}
+          disabled={mutation.isPending}
         >
-          {/* {mutation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )} */}
-          {/* {mutation.isPending ? "Entrando..." : "Entrar"} */}
+          {mutation.isPending && (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          )}
+          {mutation.isPending ? "Entrando..." : "Entrar"}
           Entrar
         </Button>
       </form>
