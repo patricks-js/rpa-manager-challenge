@@ -41,8 +41,8 @@ export const getRpaByIdRoute = new Hono().get("/:rpaId{[0-9]+}", async (c) => {
     .where(eq(rpa.id, rpaId));
 
   if (!foundRpa) {
-    return c.notFound();
+    return c.json({ error: "Not Found" }, 404);
   }
 
-  return c.json({ rpa: foundRpa });
+  return c.json({ rpa: foundRpa }, 200);
 });

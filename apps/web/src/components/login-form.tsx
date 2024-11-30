@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
+import { useAuthStore } from "@/hooks/use-auth-store";
 import { api } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -54,6 +55,7 @@ async function signIn({ username, password }: FormSchema) {
 }
 
 export function LoginForm() {
+  const { setToken } = useAuthStore.getState();
   const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: signIn,
@@ -77,7 +79,7 @@ export function LoginForm() {
   async function onSubmit(values: FormSchema) {
     const data = await mutation.mutateAsync(values);
 
-    console.log(data.token);
+    setToken(data.token);
   }
 
   return (
