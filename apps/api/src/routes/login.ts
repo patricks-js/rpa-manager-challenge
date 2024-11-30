@@ -1,6 +1,6 @@
-import { db } from "@/db/index";
-import { users } from "@/db/schema";
-import { env } from "@/env";
+import { db } from "@/db/index.js";
+import { users } from "@/db/schema.js";
+import { env } from "@/env.js";
 import { zValidator } from "@hono/zod-validator";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";

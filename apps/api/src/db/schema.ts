@@ -11,6 +11,9 @@ export const users = sqliteTable("users", {
   telefone: text("telefone").notNull(),
 });
 
+export const userSelectSchema = users.$inferSelect;
+export type User = typeof userSelectSchema;
+
 export const rpa = sqliteTable("rpa", {
   id: integer().primaryKey().notNull(),
   nome: text().notNull(),
@@ -37,3 +40,6 @@ export const rpa = sqliteTable("rpa", {
   codigoReceita: text().notNull(),
   nit: text().notNull(),
 });
+
+export const rpaSelectSchema = rpa.$inferSelect;
+export type RPA = typeof rpaSelectSchema;

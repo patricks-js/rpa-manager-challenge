@@ -1,5 +1,5 @@
-import { db } from "@/db/index";
-import { rpa } from "@/db/schema";
+import { db } from "@/db/index.js";
+import { rpa } from "@/db/schema.js";
 import { Hono } from "hono";
 
 export const fetchAllRpasRoute = new Hono().get("/", async (c) => {
