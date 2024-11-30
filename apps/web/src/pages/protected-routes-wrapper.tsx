@@ -1,6 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
 
-import { Sheet } from "@/components/ui/sheet";
 import { useAuthStore } from "@/hooks/use-auth-store";
 
 export function ProtectedRoutesWrapper() {
@@ -16,8 +15,8 @@ export function ProtectedRoutesWrapper() {
   }
 
   return (
-    <Sheet>
+    <div className="container mx-auto py-10 min-h-screen">
       <Outlet />
-    </Sheet>
+    </div>
   );
 }

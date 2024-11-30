@@ -5,12 +5,12 @@ import { type JwtVariables, jwt } from "hono/jwt";
 import { logger } from "hono/logger";
 
 import { fetchAllRpasRoute } from "@/routes/fetch-all-rpas.js";
-import { getRpaByIdRoute } from "@/routes/get-rpa-by-id.js";
 import { loginRoute } from "@/routes/login.js";
 import { registerRpaRoute } from "@/routes/register-rpa.js";
 import { updateRpaRoute } from "@/routes/update-rpa.js";
 import { createAdminUSer } from "@/scripts/create-admin-user.js";
 import { createFakeRpas } from "@/scripts/create-fake-rpas.js";
+import { getRpaByCPFRoute } from "./routes/get-rpa-by-cpf.js";
 
 export type Variables = JwtVariables<{
   sub: number;
@@ -28,8 +28,8 @@ const apiRoutes = app
   .route("/login", loginRoute)
   .route("/auth/rpa", registerRpaRoute)
   .route("/auth/rpa", fetchAllRpasRoute)
-  .route("/auth/rpa", getRpaByIdRoute)
-  .route("/auth/rpa", updateRpaRoute);
+  .route("/auth/rpa", updateRpaRoute)
+  .route("/auth/rpa", getRpaByCPFRoute);
 
 export type ApiRoutes = typeof apiRoutes;
 

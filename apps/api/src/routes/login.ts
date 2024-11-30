@@ -39,7 +39,7 @@ export const loginRoute = new Hono().post(
         sub: user.id,
         username: user.usuario,
         email: user.email,
-        exp: Math.floor(Date.now() / 1000) + 60 * 30, // Token expires in 30 minutes
+        exp: Math.floor(Date.now() / 1000) + 60 * 5, // Token expires in 5 minutes
       };
 
       const token = await sign(payload, env.JWT_SECRET);

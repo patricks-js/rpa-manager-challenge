@@ -1,3 +1,4 @@
+import { RpaEditForm } from "@/components/rpa-edit-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SheetTrigger } from "@/components/ui/sheet";
@@ -12,8 +13,11 @@ import {
 import { getRPAs } from "@/services/get-rpas";
 import { useQuery } from "@tanstack/react-query";
 import { Loader, Search } from "lucide-react";
+import { useState } from "react";
 
 export function DashboardPage() {
+  const [selectedRPA, setSelectedRPA] = useState<number>(0);
+
   const { data, error, isLoading } = useQuery({
     queryKey: ["fetch-rpas"],
     queryFn: getRPAs,
@@ -73,26 +77,32 @@ export function DashboardPage() {
               </div>
             ) : (
               data?.rpas.map((rpa) => (
-                <SheetTrigger
-                  key={rpa.id}
-                  asChild
-                >
-                  <TableRow className="h-12">
-                    <TableCell>{rpa.id}</TableCell>
-                    <TableCell>{rpa.nome}</TableCell>
-                    <TableCell>{rpa.email}</TableCell>
-                    <TableCell>{rpa.cpf}</TableCell>
-                    <TableCell>{rpa.dataNascimento}</TableCell>
-                    <TableCell>{rpa.nacionalidade}</TableCell>
-                    <TableCell>{rpa.estado}</TableCell>
-                    <TableCell>{rpa.telefone}</TableCell>
-                    <TableCell>{rpa.nit}</TableCell>
-                  </TableRow>
-                </SheetTrigger>
+                <div key={rpa.id}>
+                  <SheetTrigger
+                    asChild
+                    onClick={() => setSelectedRPA(rpa.id)}
+                  >
+                    <TableRow
+                      key={rpa.id}
+                      className="h-12"
+                    >
+                      <TableCell>{rpa.id}</TableCell>
+                      <TableCell>{rpa.nome}</TableCell>
+                      <TableCell>{rpa.email}</TableCell>
+                      <TableCell>{rpa.cpf}</TableCell>
+                      <TableCell>{rpa.dataNascimento}</TableCell>
+                      <TableCell>{rpa.nacionalidade}</TableCell>
+                      <TableCell>{rpa.estado}</TableCell>
+                      <TableCell>{rpa.telefone}</TableCell>
+                      <TableCell>{rpa.nit}</TableCell>
+                    </TableRow>
+                  </SheetTrigger>
+                </div>
               ))
             )}
           </TableBody>
         </Table>
+        <RpaEditForm rpaId={selectedRPA} />
       </div>
     </div>
   );
